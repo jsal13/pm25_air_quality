@@ -2,6 +2,8 @@ from datetime import UTC, datetime
 
 import attrs
 
+from aqi_converstion import convert_pm10_to_iaqi, convert_pm25_to_iaqi
+
 
 @attrs.define
 class AirQualityReport:
@@ -48,6 +50,7 @@ class AirQualityReport:
     standard_concentration: "PMStandardConcentration"
     ambient_concentration: "PMAmbientConcentration"
     particulate_count: "PMCount"
+    aqis: "AQIs"
     recorded_at: datetime
 
 
@@ -78,6 +81,18 @@ class PMAmbientConcentration:
 
 
 @attrs.define()
+class AQIs:
+    """
+    PM Values at "Ambient/Environment" Concentration (ie, ambient pressure).
+
+    See: https://learn.adafruit.com/pm25-air-quality-sensor/usage-notes
+    """
+
+    aqi_pm25: int
+    aqi_pm10: int
+
+
+@attrs.define()
 class PMCount:
     """The raw number of particles in 0.1 Litre of air."""
 
@@ -91,27 +106,33 @@ class PMCount:
 
 def create_report(air_quality_data: dict[str, int]) -> "AirQualityReport":
     """Create report for PM concentrations and particulate count."""
-    ambient_concentration = PMAmbientConcentration(
-        diameter_at_most_1_0=air_quality_data.get("pm10 env", -9999),
-        diameter_at_most_2_5=air_quality_data.get("pm25 env", -9999),
-        diameter_at_most_10_0=air_quality_data.get("pm100 env", -9999),
+    ambient_concentration: PMAmbientConcentration = PMAmbientConcentration(
+        diameter_at_most_1_0=air_quality_data.get("pm10 env"),
+        diameter_at_most_2_5=air_quality_data.get("pm25 env"),
+        diameter_at_most_10_0=air_quality_data.get("pm100 env"),
     )
-    standard_concentration = PMStandardConcentration(
-        diameter_at_most_1_0=air_quality_data.get("pm10 standard", -9999),
-        diameter_at_most_2_5=air_quality_data.get("pm25 standard", -9999),
-        diameter_at_most_10_0=air_quality_data.get("pm100 standard", -9999),
+    standard_concentration: PMStandardConcentration = PMStandardConcentration(
+        diameter_at_most_1_0=air_quality_data.get("pm10 standard"),
+        diameter_at_most_2_5=air_quality_data.get("pm25 standard"),
+        diameter_at_most_10_0=air_quality_data.get("pm100 standard"),
     )
-    particulate_count = PMCount(
-        number_of_particles_size_0_3um=air_quality_data.get("particles 03um", -9999),
-        number_of_particles_size_0_5um=air_quality_data.get("particles 05um", -9999),
-        number_of_particles_size_1_0um=air_quality_data.get("particles 10um", -9999),
-        number_of_particles_size_2_5um=air_quality_data.get("particles 25um", -9999),
-        number_of_particles_size_5_0um=air_quality_data.get("particles 50um", -9999),
-        number_of_particles_size_10_0um=air_quality_data.get("particles 100um", -9999),
+    particulate_count: PMCount = PMCount(
+        number_of_particles_size_0_3um=air_quality_data.get("particles 03um"),
+        number_of_particles_size_0_5um=air_quality_data.get("particles 05um"),
+        number_of_particles_size_1_0um=air_quality_data.get("particles 10um"),
+        number_of_particles_size_2_5um=air_quality_data.get("particles 25um"),
+        number_of_particles_size_5_0um=air_quality_data.get("particles 50um"),
+        number_of_particles_size_10_0um=air_quality_data.get("particles 100um"),
     )
+    aqis: AQIs = AQIs(
+        aqi_pm25=convert_pm25_to_iaqi(air_quality_data.get("pm25 env")),
+        aqi_pm10=convert_pm10_to_iaqi(air_quality_data.get("pm10 env")),
+    )
+
     return AirQualityReport(
         standard_concentration=standard_concentration,
         ambient_concentration=ambient_concentration,
         particulate_count=particulate_count,
-        recorded_at=datetime.now(tz=UTC)
+        aqis=aqis,
+        recorded_at=datetime.now(tz=UTC),
     )
