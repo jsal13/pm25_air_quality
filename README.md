@@ -10,7 +10,6 @@ With a Raspberry Pi 4b (or equivalent):
 
 1. Install the standard RP OS (lite)
 2. Run `init.sh` through SSH.
-3. 
 
 ```shell
 cd ~ && source venv/bin/activate && python pm25_air_quality/airquality/main.py
