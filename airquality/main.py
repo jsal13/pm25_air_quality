@@ -1,5 +1,5 @@
-from pathlib import Path
 import time
+from pathlib import Path
 
 from adafruit_pm25.i2c import PM25_I2C
 from air_quality_report import AirQualityReport, create_report
