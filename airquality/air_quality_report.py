@@ -92,22 +92,22 @@ class PMCount:
 def create_report(air_quality_data: dict[str, int]) -> "AirQualityReport":
     """Create report for PM concentrations and particulate count."""
     ambient_concentration = PMAmbientConcentration(
-        diameter_at_most_1_0=air_quality_data.get("pm10 env"),
-        diameter_at_most_2_5=air_quality_data.get("pm25 env"),
-        diameter_at_most_10_0=air_quality_data.get("pm100 env"),
+        diameter_at_most_1_0=air_quality_data.get("pm10 env", -9999),
+        diameter_at_most_2_5=air_quality_data.get("pm25 env", -9999),
+        diameter_at_most_10_0=air_quality_data.get("pm100 env", -9999),
     )
     standard_concentration = PMStandardConcentration(
-        diameter_at_most_1_0=air_quality_data.get("pm10 standard"),
-        diameter_at_most_2_5=air_quality_data.get("pm25 standard"),
-        diameter_at_most_10_0=air_quality_data.get("pm100 standard"),
+        diameter_at_most_1_0=air_quality_data.get("pm10 standard", -9999),
+        diameter_at_most_2_5=air_quality_data.get("pm25 standard", -9999),
+        diameter_at_most_10_0=air_quality_data.get("pm100 standard", -9999),
     )
     particulate_count = PMCount(
-        number_of_particles_size_0_3um=air_quality_data.get("particles 03um"),
-        number_of_particles_size_0_5um=air_quality_data.get("particles 05um"),
-        number_of_particles_size_1_0um=air_quality_data.get("particles 10um"),
-        number_of_particles_size_2_5um=air_quality_data.get("particles 25um"),
-        number_of_particles_size_5_0um=air_quality_data.get("particles 50um"),
-        number_of_particles_size_10_0um=air_quality_data.get("particles 100um"),
+        number_of_particles_size_0_3um=air_quality_data.get("particles 03um", -9999),
+        number_of_particles_size_0_5um=air_quality_data.get("particles 05um", -9999),
+        number_of_particles_size_1_0um=air_quality_data.get("particles 10um", -9999),
+        number_of_particles_size_2_5um=air_quality_data.get("particles 25um", -9999),
+        number_of_particles_size_5_0um=air_quality_data.get("particles 50um", -9999),
+        number_of_particles_size_10_0um=air_quality_data.get("particles 100um", -9999),
     )
     return AirQualityReport(
         standard_concentration=standard_concentration,
