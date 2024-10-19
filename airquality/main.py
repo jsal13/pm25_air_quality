@@ -1,16 +1,12 @@
-import time
-from typing import Any
 
-import board
-import busio
-import serial
+
 from adafruit_pm25.i2c import PM25_I2C
-from digitalio import DigitalInOut, Direction, Pull
+from air_quality_report import AirQualityReport, create_report
+from device import device_setup, read_data
+from export_report import export_report
 
-# GPIO connects to a reset pin (TODO: ??)
-reset_pin: Any = None
-# reset_pin = DigitalInOut(board.G0)
-# reset_pin.direction = Direction.OUTPUT
-# reset_pin.value = False
-
-uart: serial.Serial = serial.Serial("/dev/ttyS0", baudrate=9600, timeout=0.25)
+if __name__ == "__main__":
+    pm25_i2c: 'PM25_I2C' = device_setup()
+    air_quality_data: dict[str, int] = read_data(pm25_i2c=pm25_i2c)
+    report: 'AirQualityReport' = create_report()
+    export_report(report=report)
