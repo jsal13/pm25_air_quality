@@ -113,5 +113,5 @@ def create_report(air_quality_data: dict[str, int]) -> "AirQualityReport":
         standard_concentration=standard_concentration,
         ambient_concentration=ambient_concentration,
         particulate_count=particulate_count,
-        recorded_at=datetime.now(tz=UTC),
+        recorded_at=datetime.now(tz=UTC).isoformat(),
     )
