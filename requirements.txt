@@ -1,3 +1,4 @@
 attrs
+boto3
 adafruit-python-shell 
 adafruit-circuitpython-pm25

@@ -29,7 +29,7 @@ def create_csv(report: "AirQualityReport") -> Path:
     data_dir.mkdir(exist_ok=True)
 
     csv_line: str = ",".join(
-        [
+        map(str, [
             report.ambient_concentration.diameter_at_most_1_0,
             report.ambient_concentration.diameter_at_most_2_5,
             report.ambient_concentration.diameter_at_most_10_0,
@@ -40,7 +40,7 @@ def create_csv(report: "AirQualityReport") -> Path:
             report.particulate_count.number_of_particles_size_5_0um,
             report.particulate_count.number_of_particles_size_10_0um,
             report.recorded_at.isoformat(),
-        ]
+        ])
     )
 
     output_path: Path = data_dir.joinpath(report_output_name)
